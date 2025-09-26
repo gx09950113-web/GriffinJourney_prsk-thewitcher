@@ -346,7 +346,7 @@ body.theme-dark .chapter .letter pre {
 }
 
 /* 大段落分隔（由 loader.js 產生的 para-gap）— 保留即可 */
-.chapter .para-gap { margin: 1.25em 0; height: 0; }
+.chapter .para-gap { margin: 2.75em 0; height: 0; }
 
 /* 警語樣式 */
 .warning {
@@ -355,3 +355,4 @@ body.theme-dark .chapter .letter pre {
   margin-top: 2rem;
   text-align: center;
 }
+
