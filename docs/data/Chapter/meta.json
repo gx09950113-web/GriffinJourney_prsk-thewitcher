@@ -1,0 +1,22 @@
+{
+  "id": "griffin-journey",
+  "title": "Griffin Journey",
+  "chapters": [
+    { "no": 1,  "file": "ch001.md", "title": "久別重逢的炙熱" },
+    { "no": 2,  "file": "ch002.md", "title": "錯誤的願望" },
+    { "no": 3,  "file": "ch003.md", "title": "命運的綑綁" },
+    { "no": 4,  "file": "ch004.md", "title": "狩魔之道" },
+    { "no": 5,  "file": "ch005.md", "title": "毒蛇的迷夢" },
+    { "no": 6,  "file": "ch006.md", "title": "意外律" },
+    { "no": 7,  "file": "ch007.md", "title": "獵魔士的企鵝情緣" },
+    { "no": 8,  "file": "ch008.md", "title": "獅鷲與狼的合作無間" },
+    { "no": 9,  "file": "ch009.md", "title": "雪崩之後" },
+    { "no": 10, "file": "ch010.md", "title": "肉體之罪" },
+    { "no": 11, "file": "ch011.md", "title": "陶森特偶遇" },
+    { "no": 12, "file": "ch012.md", "title": "帶有魔力的旋律" },
+    { "no": 13, "file": "ch013.md", "title": "預期外的特訓" },
+    { "no": 14, "file": "ch014.md", "title": "五月節" },
+    { "no": 15, "file": "ch015.md", "title": "石之心" },
+    { "no": 16, "file": "ch016.md", "title": "即使脫離命運束縛" }
+  ]
+}
