@@ -1,0 +1,357 @@
+/* =========================
+   全站變數與字型（TTF 專用）
+   ========================= */
+
+/* 字型：繁中 */
+@font-face {
+  font-family: "GenSenRounded2TC";
+  src: url("../fonts/GenSenRounded2TC-L-02.ttf?v=20250923") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+/* 字型：日文 */
+@font-face {
+  font-family: "GenSenRounded2PJP";
+  src: url("../fonts/GenSenRounded2PJP-L-04.ttf?v=20250923") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ===== 亮色主題：以 #FFAACC 為主色 ===== */
+  --bg: #ffffff;
+  --fg: #0f172a;
+  --fg-muted: #475569;
+
+  /* 面板/卡片/邊框色調（維持清爽白底，邊框微粉感） */
+  --card: #ffffff;
+  --border: #f7d6e4;           /* 淡粉邊框，與 #FFAACC 同系 */
+  --ghost: #ff69b420;          /* 粉色系透明底，用於 hover 陰影感 */
+
+  /* 主色系（亮色） */
+  --accent: #FFAACC;           /* 主色 */
+  --accent-50: #fff0f6;        /* 最淡（hover 背景） */
+  --accent-600: #ff8fbf;       /* 深一階（邊框/hover） */
+  --accent-700: #ff6aa8;       /* 更深（active/hover-strong） */
+
+  --danger: #dc2626;
+  --radius: 16px;
+  --container-w: 900px;
+
+  --font-cjk-primary: "GenSenRounded2TC","GenSenRounded2PJP",
+                      "Noto Sans TC","Noto Sans JP",
+                      system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang TC","Microsoft JhengHei",sans-serif;
+}
+
+/* 自動：依系統暗色（基礎藍系變數，之後被 body.theme-dark 強化） */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0a1330;             /* 深藍底 */
+    --fg: #99ccff;             /* 指定字色 */
+    --fg-muted: #7aa7d9;       /* 淡藍灰 */
+
+    --card: #0f1d3f;           /* 較亮的深藍卡片 */
+    --border: #1e2b4d;         /* 藍灰邊框 */
+    --ghost: #99ccff20;        /* 淡淡的藍色透明底 */
+    --accent-50: #0f2f66;      /* 深藍 hover 底 */
+    /* 主色（暗色用藍系，避免粉在暗底失真） */
+    --accent: #4da3ff;
+    --accent-600: #2c8aff;
+    --accent-700: #1a6fe0;
+  }
+}
+
+/* ★ 主題強制覆蓋（你的 JS 會在 <body> 放 theme-* 類別） */
+body.theme-light {
+  --bg: #ffffff;
+  --fg: #0f172a;
+  --fg-muted: #475569;
+  --card: #ffffff;
+  --border: #f7d6e4;
+  --ghost: #ff69b420;
+  --accent: #FFAACC;
+  --accent-50: #fff0f6;
+  --accent-600: #ff8fbf;
+  --accent-700: #ff6aa8;
+}
+body.theme-dark {
+  --bg: #0a1330;
+  --fg: #99ccff;        /* 需求指定：暗色字體 #99ccff */
+  --fg-muted: #7aa7d9;
+  --card: #0f1d3f;
+  --border: #1e2b4d;
+  --ghost: #99ccff20;
+  --accent: #4da3ff;
+  --accent-50: #0f2f66;
+  --accent-600: #2c8aff;
+  --accent-700: #1a6fe0;
+}
+/* auto 模式不需特別處理，沿用 prefers-color-scheme 的 :root 值 */
+
+/* Reset & base */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-cjk-primary);
+  line-height: 1.7;
+
+  /* ★ 讓字級按鈕生效（預設 18px 對應你的 JS 初始值） */
+  font-size: var(--font-size, 18px);
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+
+  /* 禁止整站文字選取（你原本就有，保留） */
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* 小工具：被 JS 切換用 */
+.hidden { display: none !important; }
+
+.container { width: 100%; max-width: var(--container-w); margin-inline: auto; padding-inline: 16px; }
+
+.topbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: var(--bg); z-index: 50;
+}
+.brand { font-size: 1.2rem; margin: 0; }
+.spacer { flex: 1; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  padding: 8px 12px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--card);
+  color: var(--fg); text-decoration: none; cursor: pointer;
+  transition: background .15s, border-color .15s, transform .05s; user-select: none;
+}
+.btn:hover { background: var(--accent-50); border-color: var(--accent-600); }
+.btn:active { transform: translateY(1px); }
+.btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn.primary:hover { background: var(--accent-700); }
+.btn.ghost { background: transparent; }
+
+.muted { color: var(--fg-muted); }
+.small { font-size: .9rem; }
+.row { display: flex; flex-wrap: wrap; }
+.gap { gap: 8px; }
+
+.card { border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); padding: 16px; }
+.hero { margin-top: 24px; }
+
+/* Reader 主區 */
+.reader { padding-block: 16px; }
+.chapter { font-size: 1.05rem; line-height: 1.9; }
+.chapter h2, .chapter h3 { margin-top: 1.8em; margin-bottom: .6em; }
+.chapter p {
+  margin: 1em 0;
+  text-indent: 2em;   /* 段落首行縮排兩個字寬 */
+}
+.chapter .para-gap {
+  margin: 2.5em 0;
+  height: 0;
+}
+.chapter blockquote {
+  margin: 1em 0; padding: .75em 1em; border-left: 3px solid var(--accent-600);
+  background: var(--ghost); border-radius: 8px;
+}
+.chapter img { max-width: 100%; height: auto; border-radius: 8px; }
+
+/* Reader 導覽 */
+.reader-nav {
+  margin-top: 24px; display: flex; align-items: center; gap: 12px;
+  justify-content: space-between; border-top: 1px solid var(--border); padding-top: 12px;
+}
+.reader-nav .progress { color: var(--fg-muted); }
+
+/* TOC 抽屜 */
+.toc-drawer {
+  position: fixed; inset: 0 auto 0 0; width: min(85vw, 360px);
+  background: var(--bg); border-right: 1px solid var(--border);
+  transform: translateX(-100%); transition: transform .25s ease; z-index: 60;
+  display: flex; flex-direction: column;
+}
+.toc-drawer.open { transform: translateX(0); }
+.toc-head { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--border); }
+.toc-list { overflow: auto; padding: 8px 12px; }
+.toc-list a { display: block; padding: 6px 8px; border-radius: 8px; text-decoration: none; color: var(--fg); }
+.toc-list a:hover { background: var(--accent-50); }
+
+/* 遮罩 */
+.scrim { position: fixed; inset: 0; background: rgba(0,0,0,.25); opacity: 0; visibility: hidden; transition: .2s; z-index: 55; }
+.scrim.show { opacity: 1; visibility: visible; }
+
+/* 章內 TOC */
+.inpage-toc { border: 1px solid var(--border); background: var(--card); border-radius: var(--radius); padding: 8px 12px; margin: 8px 0 16px; }
+.inpage-toc summary { cursor: pointer; font-weight: 600; }
+.inpage-toc ul { list-style: none; padding: 0; margin: 8px 0 0; }
+.inpage-toc li { margin: 4px 0; }
+.inpage-toc .lv3 { padding-left: 16px; opacity: .9; }
+
+/* 置頂按鈕 */
+.fab {
+  position: fixed; right: 16px; bottom: 16px;
+  width: 44px; height: 44px; border-radius: 50%;
+  box-shadow: 0 8px 20px rgba(0,0,0,.2); z-index: 40;
+}
+
+/* footer */
+.footnotes { border-top: 1px solid var(--border); padding: 12px 16px; margin-top: 24px; color: var(--fg-muted); }
+
+/* 載入遮罩（以目前主題色混合處理） */
+.loading-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  background: color-mix(in oklab, var(--bg) 70%, black 30%);
+  backdrop-filter: blur(2px);
+  transition: opacity .25s ease, visibility .25s ease;
+}
+.loading-overlay[hidden] { opacity: 0; visibility: hidden; }
+.loading-box {
+  min-width: 200px; padding: 14px 16px; border-radius: 12px; background: var(--card);
+  box-shadow: 0 10px 30px rgba(0,0,0,.15);
+  display: flex; align-items: center; gap: 12px; color: var(--fg); font-weight: 600;
+}
+.loading-spinner {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 3px solid color-mix(in oklab, var(--accent) 60%, transparent);
+  border-top-color: transparent; animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 提示 / 錯誤 */
+.note, .callout { border: 1px solid var(--border); border-radius: 12px; background: var(--card); padding: 12px 14px; margin: 12px 0; }
+.callout.error {
+  /* 亮色維持紅系警示 */
+  border-color: #fecaca; background: #fef2f2; color: #7f1d1d;
+}
+@media (prefers-color-scheme: dark) {
+  .callout.error {
+    /* 暗色在深藍底上加強對比的暖紅 */
+    border-color: #7f1d1d; background: #2b0b0b; color: #fecaca;
+  }
+}
+
+/* RWD */
+@media (max-width: 640px) {
+  .brand { font-size: 1.05rem; }
+  .chapter { font-size: 1rem; }
+  .reader-nav .progress { display: none; }
+}
+
+/* ============ 羊皮紙信件（對應 ::: letter） ============ */
+.chapter .letter {
+  border: 1px solid #d8c7a0;
+  border-radius: 14px;
+  padding: 1.25em 1.6em;
+  margin: 1.6em 0;
+  box-shadow:
+    0 10px 18px rgba(0,0,0,.10),
+    inset 0 0 0.5px rgba(255,255,255,.5);
+  background-color: #f6f1e1;
+  background-image:
+    radial-gradient(100px 60px at 20% 30%, rgba(140,110,70,.06) 0%, transparent 70%),
+    radial-gradient(120px 80px at 75% 20%, rgba(140,110,70,.05) 0%, transparent 70%),
+    radial-gradient(160px 90px at 65% 75%, rgba(120,90,60,.05) 0%, transparent 70%),
+    linear-gradient(180deg, rgba(120,90,60,.04), rgba(0,0,0,0) 40%, rgba(120,90,60,.04) 60%, rgba(0,0,0,0)),
+    linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0) 30%, rgba(0,0,0,.06) 100%);
+  background-blend-mode: multiply, multiply, multiply, normal, normal;
+  position: relative;
+  overflow: hidden;
+}
+.chapter .letter::before {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 2px 14px rgba(0,0,0,.10),
+    inset 0 0 40px rgba(115,85,55,.10);
+}
+
+/* 信件內文 */
+.chapter .letter p {
+  margin: .85em 0;
+  text-indent: 0em;
+  line-height: 1.95;
+  font-family: "GenSenRounded2PJP","GenSenRounded2TC", ui-serif, Georgia, "Times New Roman", serif;
+}
+
+/* 信件內的分隔線（若你在信內用 ---）稍微淡一點 */
+.chapter .letter hr {
+  border: 0; height: 1px;
+  background: linear-gradient(to right, transparent, rgba(120,90,60,.35), transparent);
+  margin: 1.2em 0;
+}
+
+/* 深色模式下的羊皮紙：維持你原本偏暖且高對比的設定 */
+body.theme-dark .chapter .letter {
+  border-color: #bcae8b;
+  background-color: #e9e1c8;
+  background-image:
+    radial-gradient(100px 60px at 20% 30%, rgba(90,70,40,.10) 0%, transparent 70%),
+    radial-gradient(120px 80px at 75% 20%, rgba(90,70,40,.08) 0%, transparent 70%),
+    radial-gradient(160px 90px at 65% 75%, rgba(80,60,35,.08) 0%, transparent 70%),
+    linear-gradient(180deg, rgba(80,60,35,.06), rgba(0,0,0,0) 40%, rgba(80,60,35,.06) 60%, rgba(0,0,0,0)),
+    linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,0) 30%, rgba(0,0,0,.10) 100%);
+}
+body.theme-dark .chapter .letter::before {
+  box-shadow:
+    inset 0 2px 14px rgba(0,0,0,.18),
+    inset 0 0 42px rgba(70,55,35,.18);
+}
+
+/* 你原本要求的強對比文字：保留 */
+body.theme-dark .chapter .letter { color: #000000; }
+body.theme-dark .chapter .letter h1,
+body.theme-dark .chapter .letter h2,
+body.theme-dark .chapter .letter h3,
+body.theme-dark .chapter .letter h4,
+body.theme-dark .chapter .letter h5,
+body.theme-dark .chapter .letter h6 {
+  color: #000000;
+  font-weight: 700;
+}
+body.theme-dark .chapter .letter a {
+  color: #0f172a;
+  text-decoration-color: rgba(15,23,42,.6);
+}
+body.theme-dark .chapter .letter a:hover {
+  color: #1e3a8a;
+  text-decoration-color: rgba(30,58,138,.8);
+}
+body.theme-dark .chapter .letter .muted,
+body.theme-dark .chapter .letter small,
+body.theme-dark .chapter .letter figcaption {
+  color: #111111;
+}
+body.theme-dark .chapter .letter blockquote {
+  color: #000000;
+  border-left-color: #4b5563;
+  background: rgba(0,0,0,.05);
+}
+body.theme-dark .chapter .letter code,
+body.theme-dark .chapter .letter pre {
+  color: #000000;
+  background: #f8f8f8;
+  border-color: #e5e7eb;
+}
+
+/* 大段落分隔（由 loader.js 產生的 para-gap）— 保留即可 */
+.chapter .para-gap { margin: 1.25em 0; height: 0; }
+
+/* 警語樣式 */
+.warning {
+  color: #dc2626;
+  font-weight: bold;
+  margin-top: 2rem;
+  text-align: center;
+}
