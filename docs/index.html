@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="robots" content="noindex, noarchive" />
+  <title>Griffin Journey｜閱讀入口</title>
+
+  <!-- 全站樣式（含 TTF 字型宣告） -->
+  <link rel="stylesheet" href="./assets/css/style.css" />
+
+  <!-- 只用 TTF 的字型預載（請確認檔案存在於 docs/assets/fonts/） -->
+  <link rel="preload" href="./assets/fonts/GenSenRounded2TC-L-02.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="./assets/fonts/GenSenRounded2PJP-L-04.ttf" as="font" type="font/ttf" crossorigin>
+
+  <!--（可選）站台小圖示，若沒有可刪掉或改成你的路徑 -->
+  <!-- <link rel="icon" href="./assets/img/favicon.png" type="image/png"> -->
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+    }
+  </script>
+</head>
+<body class="theme-auto">
+  <header class="topbar container">
+    <h1 class="brand">Griffin Journey</h1>
+    <div class="spacer"></div>
+    <a class="btn primary" href="./reader.html?ch=001" title="從第一章開始">開始閱讀 →</a>
+  </header>
+
+  <main class="container">
+    <section class="card hero">
+      <h2>歡迎來到《Griffin Journey》</h2>
+      <p class="muted small">
+        你可以直接點右上角「開始閱讀」，從第一章開始；或在下面的章節清單中選擇任意章節進入。
+      </p>
+      <div id="quick-actions" class="row gap" style="margin-top:8px;">
+        <!-- 這裡會在載入 meta 後，動態插入「上次讀到」按鈕（若偵測到進度） -->
+      </div>
+    </section>
+
+    <section id="chapters" class="card" style="margin-top:20px;">
+      <h3 style="margin-top:0;">章節清單</h3>
+      <div id="chapters-list" class="row gap" aria-busy="true">
+        <span class="muted">載入章節中…</span>
+      </div>
+    </section>
+
+    <!-- 警語區塊（不動既有結構，僅新增一段） -->
+    <section class="card" role="note" aria-label="使用警語"
+             style="margin-top:20px;border:1px dashed #dc2626;background:#fee2e2;">
+      <p style="margin:12px 16px;text-align:center;font-weight:700;color:#b91c1c">
+        ⚠️ 本書為付費刊物，嚴禁將本書連結外流、轉載或公開索引。
+      </p>
+    </section>
+  </main>
+
+<footer class="container footnotes">
+  <small>© Griffin Journey presented by Egaruk</small>
+  ·
+  <a href="https://www.plurk.com/xx7127" target="_blank" rel="noopener">燁冥</a>
+  ·
+  <a href="https://pjsekai.sega.jp/" target="_blank" rel="noopener">プロジェクトセカイカラフルステージ！ feat.初音ミク</a>
+    ·
+  <a href="https://witcher.huijiwiki.com/wiki/%E9%A6%96%E9%A1%B5" target="_blank" rel="noopener">獵魔士簡體中文維基</a>
+</footer>
+
+  <!-- 本頁限定：阻擋複製/剪下/貼上/右鍵/拖曳 -->
+  <script>
+    // 阻擋複製、剪下、貼上
+    ['copy','cut','paste'].forEach(evt => {
+      document.addEventListener(evt, e => e.preventDefault());
+    });
+
+    // 阻擋右鍵選單、拖曳選取、文字選取起始
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('dragstart',  e => e.preventDefault());
+    document.addEventListener('selectstart', e => e.preventDefault());
+
+    // 盡量攔鍵盤複製（Ctrl/Cmd + C / X）
+    document.addEventListener('keydown', e => {
+      const k = e.key.toLowerCase();
+      if ((e.ctrlKey || e.metaKey) && (k === 'c' || k === 'x' || k === 'a')) {
+        e.preventDefault();
+      }
+    });
+
+    (async function () {
+      const listEl = document.getElementById('chapters-list');
+      const qaEl   = document.getElementById('quick-actions');
+
+      // 嘗試讀取 meta.json（單書專用：固定在 docs/data/Chapter/）
+      let meta = null;
+      try {
+        const res = await fetch('./data/Chapter/meta.json', { cache: 'no-cache' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        meta = await res.json();
+      } catch (err) {
+        listEl.innerHTML = '<div class="callout error"><strong>讀取失敗</strong><p>找不到 <code>docs/data/Chapter/meta.json</code> 或檔案格式有誤。</p></div>';
+        listEl.removeAttribute('aria-busy');
+        console.error('[index] 無法讀取 meta.json：', err);
+        return;
+      }
+
+      // 生成章節按鈕
+      if (!meta.chapters || !meta.chapters.length) {
+        listEl.innerHTML = '<span class="muted">目前沒有可顯示的章節。</span>';
+      } else {
+        listEl.innerHTML = '';
+        const frag = document.createDocumentFragment();
+        meta.chapters.forEach(c => {
+          const no = String(c.no).padStart(3, '0');
+          const a = document.createElement('a');
+          a.className = 'btn';
+          a.href = `./reader.html?ch=${no}`;
+          a.setAttribute('title', `第 ${c.no} 章${c.title ? '：' + c.title : ''}`);
+          a.textContent = c.title ? `第 ${c.no} 章 · ${c.title}` : `第 ${c.no} 章`;
+          frag.appendChild(a);
+        });
+        listEl.appendChild(frag);
+      }
+      listEl.removeAttribute('aria-busy');
+
+      // 嘗試提供「上次讀到」捷徑（如果你的 ui.js/setProgress 使用 meta.id 作為 key）
+      try {
+        const progressRaw = localStorage.getItem(meta.id);
+        if (progressRaw) {
+          const p = JSON.parse(progressRaw);
+          const ch = p?.ch || '001';
+          const btn = document.createElement('a');
+          btn.className = 'btn';
+          btn.href = `./reader.html?ch=${String(ch).padStart(3,'0')}`;
+          btn.textContent = `上次讀到：第 ${parseInt(ch,10)} 章`;
+          qaEl.appendChild(btn);
+        }
+      } catch (_) {
+        // 若結構不同或沒有進度，靜默忽略
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#2563eb" />
+  <title>Griffin Journey</title>
+
+  <!-- 共用樣式（含 TTF 字型與載入遮罩樣式） -->
+  <link rel="stylesheet" href="./assets/css/style.css" />
+
+  <script src="./assets/js/guard.js" defer></script>
+  
+  <!-- 只用 TTF 預載（請確認檔案存在於 docs/assets/fonts/） -->
+  <link rel="preload" href="./assets/fonts/GenSenRounded2TC-L-02.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="./assets/fonts/GenSenRounded2PJP-L-04.ttf" as="font" type="font/ttf" crossorigin>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+    }
+  </script>
+</head>
+<body class="theme-auto">
+  <!-- 真正的載入遮罩 -->
+  <div id="loading" class="loading-overlay" role="status" aria-live="polite" aria-label="內容載入中">
+    <div class="loading-box">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <span>內容載入中…</span>
+    </div>
+  </div>
+
+  <noscript>
+    <div class="container note">
+      本頁需要啟用 JavaScript 才能載入章節內容。
+    </div>
+  </noscript>
+
+  <header class="topbar container">
+    <a class="btn" href="./index.html" title="回首頁">🏠</a>
+    <h1 id="book-title" class="brand">Loading…</h1>
+    <div class="spacer"></div>
+    <div class="reader-controls">
+      <button id="btn-font-dec" class="btn ghost" title="縮小字級">A−</button>
+      <button id="btn-font-inc" class="btn ghost" title="放大字級">A+</button>
+      <button id="btn-theme" class="btn ghost" title="亮/暗/自動">🌓</button>
+      <button id="btn-toc" class="btn" title="章節目錄">📖 目錄</button>
+    </div>
+  </header>
+
+  <aside id="toc-drawer" class="toc-drawer">
+    <div class="toc-head">
+      <strong id="toc-title">章節目錄</strong>
+      <button id="btn-toc-close" class="btn ghost">✕</button>
+    </div>
+    <nav id="toc-list" class="toc-list"></nav>
+  </aside>
+  <div id="scrim" class="scrim"></div>
+
+  <main id="reader" class="container reader" aria-busy="true">
+    <article id="chapter" class="chapter">Loading…</article>
+
+    <nav class="reader-nav">
+      <a id="prev" class="btn" href="#">← 上一章</a>
+      <span class="progress" id="progress">第 1 / 17 章</span>
+      <a id="next" class="btn" href="#">下一章 →</a>
+    </nav>
+  </main>
+
+  <button id="btn-top" class="btn fab" title="回到頂部">↑</button>
+
+  <footer class="container footnotes">
+    <small id="foot-info"></small>
+  </footer>
+
+  <!-- ✅ 標準 Markdown 解析器（CDN） -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- 入口腳本（保持你的原有檔名與順序） -->
+  <script type="module" src="./assets/js/app-reader.js"></script>
+  <script type="module" src="./assets/js/ui.js"></script>
+  <script type="module" src="./assets/js/toc.js"></script>
+
+  <!-- 保險閥：15s 後強制收起遮罩 -->
+  <script>
+    (function(){
+      const loading = document.getElementById('loading');
+      const reader = document.getElementById('reader');
+      setTimeout(() => {
+        loading?.setAttribute('hidden','');
+        reader?.setAttribute('aria-busy','false');
+      }, 15000);
+      const ch = document.getElementById('chapter');
+      const mo = new MutationObserver(() => {
+        const txt = (ch.textContent||'').trim();
+        if (txt && txt !== 'Loading…') {
+          loading?.setAttribute('hidden','');
+          reader?.setAttribute('aria-busy','false');
+          mo.disconnect();
+        }
+      });
+      mo.observe(ch, {childList:true,subtree:true,characterData:true});
+    })();
+  </script>
+</body>
+</html>
+
+
